@@ -1,0 +1,23 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "cSpell.words": [
+    "Avenir",
+    "composables",
+    "evse",
+    "evses",
+    "finalhandler",
+    "iccid",
+    "idtag",
+    "imsi",
+    "ocpp",
+    "preinstall",
+    "RFID",
+    "webui"
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "sap-1",
+    "projectKey": "e-mobility-charging-stations-simulator-webui"
+  }
+}

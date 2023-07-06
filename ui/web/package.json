@@ -1,0 +1,60 @@
+{
+  "name": "webui",
+  "version": "0.1.1",
+  "readme": "README.md",
+  "engines": {
+    "node": ">=16.9.0",
+    "pnpm": ">=8.6.0"
+  },
+  "volta": {
+    "node": "20.3.1",
+    "pnpm": "8.6.5"
+  },
+  "scripts": {
+    "preinstall": "npx --yes only-allow pnpm",
+    "start": "pnpm build && node start.js",
+    "dev": "vite",
+    "serve": "vite preview",
+    "build": "vite build",
+    "clean:dist": "npx rimraf dist",
+    "clean:node_modules": "npx rimraf node_modules",
+    "lint": "cross-env TIMING=1 eslint . --cache --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --ignore-path .gitignore",
+    "lint:fix": "cross-env TIMING=1 eslint . --cache --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format": "prettier --cache --write .",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "finalhandler": "^1.2.0",
+    "serve-static": "^1.15.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^1.0.2",
+    "@types/jsdom": "^21.1.1",
+    "@types/node": "^20.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^3.0.1",
+    "@vitest/coverage-c8": "^0.32.2",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "@vue/eslint-config-typescript": "^11.0.3",
+    "@vue/test-utils": "^2.4.0",
+    "@vue/tsconfig": "^0.4.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.44.0",
+    "eslint-define-config": "^1.21.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-vue": "^9.15.1",
+    "jsdom": "^22.1.0",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "typescript": "~5.1.6",
+    "vite": "^4.3.9",
+    "vitest": "^0.32.2"
+  },
+  "_id": "webui@0.1.1"
+}

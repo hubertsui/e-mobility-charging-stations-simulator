@@ -1,0 +1,45 @@
+{
+  "supervisionUrls": ["ws://server:8010/OCPP16/5c866e81a2d9593de43efdb4"],
+  "supervisionUrlDistribution": "round-robin",
+  "log": {
+    "file": "/dev/stdout",
+    "errorFile": "/dev/stderr",
+    "console": false,
+    "rotate": false
+  },
+  "worker": {
+    "processType": "workerSet",
+    "elementsPerWorker": 1,
+    "poolMinSize": 4,
+    "poolMaxSize": 16
+  },
+  "uiServer": {
+    "enabled": true
+  },
+  "stationTemplateUrls": [
+    {
+      "file": "siemens.station-template.json",
+      "numberOfStations": 0
+    },
+    {
+      "file": "keba.station-template.json",
+      "numberOfStations": 0
+    },
+    {
+      "file": "abb.station-template.json",
+      "numberOfStations": 0
+    },
+    {
+      "file": "evlink.station-template.json",
+      "numberOfStations": 0
+    },
+    {
+      "file": "schneider.station-template.json",
+      "numberOfStations": 0
+    },
+    {
+      "file": "virtual-simple-atg.station-template.json",
+      "numberOfStations": 10
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "testExplorer.useNativeTesting": true,
+  "mochaExplorer.nodeArgv": [
+    "--loader=ts-node/esm",
+    "--no-warnings=ExperimentalWarning",
+    "--experimental-specifier-resolution=node"
+  ],
+  "mochaExplorer.files": ["test/**/*.test.ts"],
+  "mochaExplorer.debuggerConfig": "Debug Simulator Unit Tests",
+  "cSpell.words": [
+    "benoit",
+    "bufferutil",
+    "cacheable",
+    "commitlint",
+    "corepack",
+    "csms",
+    "emerg",
+    "emobility",
+    "evse",
+    "evses",
+    "iccid",
+    "idtag",
+    "idtags",
+    "imsi",
+    "lcov",
+    "logform",
+    "measurand",
+    "measurands",
+    "mikro",
+    "mnemonist",
+    "mochawesome",
+    "ocpp",
+    "piment",
+    "poolifier",
+    "preinstall",
+    "Recurrency",
+    "RFID",
+    "robohydra",
+    "shutdowning",
+    "sonarlint",
+    "SRPC",
+    "tsdoc",
+    "VCAP",
+    "webui"
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "sap-1",
+    "projectKey": "e-mobility-charging-stations-simulator"
+  }
+}
