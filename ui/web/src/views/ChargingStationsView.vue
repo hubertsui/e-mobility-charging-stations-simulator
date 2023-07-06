@@ -49,6 +49,9 @@ async function load(): Promise<void> {
   state.chargingStations =
     listChargingStationsPayload.chargingStations as unknown as ChargingStationData[];
   state.isLoading = false;
+  setTimeout(() => {
+    load();
+  }, 10 * 1000);
 }
 
 function startSimulator(): void {

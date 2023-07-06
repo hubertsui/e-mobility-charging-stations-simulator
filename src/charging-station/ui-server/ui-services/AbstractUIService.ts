@@ -175,16 +175,13 @@ export abstract class AbstractUIService {
   }
 
   private handleListChargingStations(): ResponsePayload {
-    console.log('list charging station', this);
     return {
       status: ResponseStatus.SUCCESS,
       chargingStations: [...this.uiServer.chargingStations.values()],
-      all: [...this.uiServer.chargingStations],
     } as ResponsePayload;
   }
 
   private handleListMessages(): ResponsePayload {
-    console.log(this);
     return {
       status: ResponseStatus.SUCCESS,
       messages: [...this.uiServer.chargingStations.values()],
