@@ -16,6 +16,7 @@
     <Button @click="stopTransaction()">Stop Transaction</Button>
     <Button @click="startAutomaticTransactionGenerator()">Start ATG</Button>
     <Button @click="stopAutomaticTransactionGenerator()">Stop ATG</Button>
+    <Button @click="toggleMessages()">Toggle Messages</Button>
   </td>
   <td class="cs-table__connector-col">{{ connectorId }}</td>
   <td class="cs-table__status-col">{{ connector.status }}</td>
@@ -38,6 +39,11 @@ const props = defineProps<{
   idTag?: string;
 }>();
 
+const emit = defineEmits(['toggleMessages']);
+
+function toggleMessages() {
+  emit("toggleMessages");
+}
 // type State = {
 //   isIdTagModalVisible: boolean;
 //   idTag: string;

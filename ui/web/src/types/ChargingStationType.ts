@@ -14,6 +14,15 @@ export type ChargingStationData = {
   automaticTransactionGenerator?: Status[];
 };
 
+
+export class MessageLog {
+  type?: string;
+  name?: string;
+  payload?: string;
+  time?: Date;
+  success?: boolean;
+}
+
 export type ChargingStationInfo = {
   hashId: string;
   chargingStationId?: string;
@@ -21,6 +30,8 @@ export type ChargingStationInfo = {
   chargePointVendor: string;
   firmwareVersionPattern?: string;
   firmwareVersion?: string;
+  firmwareStatus?: string;
+  messages?: MessageLog[];
   numberOfConnectors?: number | number[];
   baseName: string;
   templateHash?: string;
@@ -172,6 +183,7 @@ export type ConnectorStatus = {
   availability: AvailabilityType;
   bootStatus?: ChargePointStatus;
   status?: ChargePointStatus;
+  firmwareStatus?: string;
   authorizeIdTag?: string;
   idTagAuthorized?: boolean;
   localAuthorizeIdTag?: string;

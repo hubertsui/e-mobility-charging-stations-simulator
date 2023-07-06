@@ -9,6 +9,7 @@
         <th scope="col" class="cs-table__connector-col">Connector</th>
         <th scope="col" class="cs-table__status-col">Status</th>
         <th scope="col" class="cs-table__transaction-col">Transaction</th>
+        <th scope="col" class="cs-table__firmwarestatus-col">Firmware Status</th>
         <th scope="col" class="cs-table__name-col">Name</th>
         <th scope="col" class="cs-table__started-col">Started</th>
         <th scope="col" class="cs-table__wsState-col">WebSocket State</th>
@@ -19,12 +20,8 @@
       </tr>
     </thead>
     <tbody id="cs-table__body">
-      <CSData
-        v-for="chargingStation in props.chargingStations"
-        :key="chargingStation.stationInfo?.hashId"
-        :charging-station="chargingStation"
-        :id-tag="props.idTag"
-      />
+      <CSData v-for="chargingStation in props.chargingStations" :key="chargingStation.stationInfo?.hashId"
+        :charging-station="chargingStation" :id-tag="props.idTag" />
     </tbody>
   </table>
 </template>
@@ -80,6 +77,16 @@ const props = defineProps<{
   background-color: rgb(223, 217, 217);
 }
 
+.cs-table__messages-col {
+  flex-grow: 1;
+}
+
+.msg-time {
+  font-size: 0.8em;
+  color: #666;
+  margin-bottom: 5px;
+}
+
 .cs-table__action-col,
 .cs-table__connector-col,
 .cs-table__status-col,
@@ -96,5 +103,30 @@ const props = defineProps<{
   padding-top: 0.2%;
   padding-bottom: 0.2%;
   text-align: center;
+  word-break: break-all;
+}
+
+.message-container {
+  overflow-y: auto;
+  max-height: 500px;
+  background-color: #f5f5f5;
+  padding: 16px;
+}
+
+.message {
+  margin-bottom: 8px;
+  border-radius: 8px;
+  padding: 8px;
+  position: relative;
+}
+
+.message-send {
+  margin-left: 32px;
+  background-color: rgba(149, 236, 105);
+}
+
+.message-receive {
+  margin-right: 32px;
+  background-color: white;
 }
 </style>
