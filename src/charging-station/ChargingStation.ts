@@ -104,14 +104,7 @@ import {
   logger,
   watchJsonFile,
 } from '../utils';
-
-export class MessageLog {
-  public type: string;
-  public name: string;
-  public payload: string;
-  public time: Date;
-  public success: boolean;
-}
+import type { MessageLog } from '../types/ChargingStationInfo';
 
 export class ChargingStation {
   public readonly index: number;
@@ -132,7 +125,6 @@ export class ChargingStation {
   public bootNotificationRequest!: BootNotificationRequest;
   public bootNotificationResponse!: BootNotificationResponse | undefined;
   public powerDivider!: number;
-  public messages: MessageLog[];
   private stopping: boolean;
   private configurationFile!: string;
   private configurationFileHash!: string;
@@ -165,7 +157,6 @@ export class ChargingStation {
     this.sharedLRUCache = SharedLRUCache.getInstance();
     this.idTagsCache = IdTagsCache.getInstance();
     this.chargingStationWorkerBroadcastChannel = new ChargingStationWorkerBroadcastChannel(this);
-    this.messages = [];
 
     this.initialize();
   }
@@ -1859,7 +1850,12 @@ export class ChargingStation {
   }
 
   private getOcppConfigurationFromFile(): ChargingStationOcppConfiguration | undefined {
-    const configurationKey = this.getConfigurationFromFile()?.configurationKey;
+    var config = this.getConfigurationFromFile();
+    if(config?.stationInfo?.messages) {
+      console.log('reset messages');
+      config.stationInfo.messages = [];
+    }
+    const configurationKey = config?.configurationKey;
     if (this.getOcppPersistentConfiguration() === true && configurationKey) {
       return { configurationKey };
     }
@@ -1963,13 +1959,22 @@ export class ChargingStation {
     );
   }
 
+  public addMessage(msg:MessageLog) {
+    if(this.stationInfo != null) {
+      if(!this.stationInfo.messages) {
+        this.stationInfo.messages = [];
+      }
+      this.stationInfo.messages.push(msg);
+    }
+  }
+
   private async handleIncomingMessage(request: IncomingRequest): Promise<void> {
     const [messageType, messageId, commandName, commandPayload] = request;
     if (this.getEnableStatistics() === true) {
       this.performanceStatistics?.addRequestStatistic(commandName, messageType);
     }
-    this.messages.push({
-      type: 'Receive',
+    this.addMessage({
+      type: 'receive',
       time: new Date(),
       payload: JSON.stringify(commandPayload),
       name: commandName,
@@ -2005,8 +2010,8 @@ export class ChargingStation {
       messageType,
       messageId
     );
-    this.messages.push({
-      type: 'Receive',
+    this.addMessage({
+      type: 'receive',
       time: new Date(),
       payload: JSON.stringify(commandPayload),
       name: requestCommandName,
@@ -2032,8 +2037,8 @@ export class ChargingStation {
       );
     }
     const [, errorCallback, requestCommandName] = this.getCachedRequest(messageType, messageId);
-    this.messages.push({
-      type: 'Receive',
+    this.addMessage({
+      type: 'receive',
       time: new Date(),
       payload: JSON.stringify(JSON.stringify(errorResponse)),
       name: requestCommandName,

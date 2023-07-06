@@ -361,7 +361,7 @@ export abstract class OCPPRequestService {
             const beginId = PerformanceStatistics.beginMeasure(commandName);
             try {
               chargingStation.wsConnection?.send(messageToSend);
-              chargingStation.messages.push({
+              chargingStation.addMessage({
                 type: 'send',
                 time: new Date(),
                 payload: messageToSend,
@@ -374,7 +374,7 @@ export abstract class OCPPRequestService {
                 )} payload: ${messageToSend}`
               );
             } catch (error) {
-              chargingStation.messages.push({
+              chargingStation.addMessage({
                 type: 'send',
                 time: new Date(),
                 payload: messageToSend,

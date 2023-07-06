@@ -1378,6 +1378,14 @@ export class OCPP16IncomingRequestService extends OCPPIncomingRequestService {
     chargingStation: ChargingStation,
     commandPayload: OCPP16TriggerMessageRequest
   ): OCPP16TriggerMessageResponse {
+    console.log(`checkFeatureProfile:${OCPP16ServiceUtils.checkFeatureProfile(
+      chargingStation,
+      OCPP16SupportedFeatureProfiles.RemoteTrigger,
+      OCPP16IncomingRequestCommand.TRIGGER_MESSAGE
+    )}, isMessageTriggerSupported:${OCPP16ServiceUtils.isMessageTriggerSupported(
+      chargingStation,
+      commandPayload.requestedMessage
+    )}`)
     if (
       !OCPP16ServiceUtils.checkFeatureProfile(
         chargingStation,

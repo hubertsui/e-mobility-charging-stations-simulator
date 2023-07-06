@@ -29,7 +29,7 @@
       {
         "key": "SupportedFeatureProfiles",
         "readonly": true,
-        "value": "Core,LocalAuthListManagement"
+        "value": "Core,FirmwareManagement,LocalAuthListManagement"
       },
       {
         "key": "LocalAuthListEnabled",

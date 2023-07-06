@@ -167,6 +167,7 @@ export class OCPP16RequestService extends OCPPRequestService {
       case OCPP16RequestCommand.METER_VALUES:
       case OCPP16RequestCommand.STATUS_NOTIFICATION:
       case OCPP16RequestCommand.DATA_TRANSFER:
+        console.log("BUILD REQUEST PAYLOAD", commandName);
         return commandParams as unknown as Request;
       case OCPP16RequestCommand.AUTHORIZE:
         return {
