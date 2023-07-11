@@ -2,11 +2,11 @@
   "idTagsFile": "idtags.json",
   "baseName": "095e470eb0f9477ab95496aa81dd85c6",
   "fixedName": true,
-  "firmwareVersion": "V1.0.1",
-  "firmwareVersionPattern": "^.+$",
+  "firmwareVersionPattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+  "firmwareVersion": "4.0.4.22",
   "firmwareStatus": "Installed",
-  "firmwareUpgrade":{
-    
+  "firmwareUpgrade": {
+    "manual": true
   },
   "chargePointModel": "Simulator simple",
   "chargePointVendor": "Ovomaltin",

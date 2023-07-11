@@ -1,11 +1,11 @@
 <template>
   <td class="cs-table__action-col">
-    <!-- <Button @click="startChargingStation()">开机</Button>
-    <Button @click="stopChargingStation()">关机</Button>
-    <br>
-    <Button @click="openConnection()">上线</Button>
-    <Button @click="closeConnection()">下线</Button>
-    <br> -->
+    <div class="line">
+      <Button @click="startChargingStation()">开机</Button>
+      <Button @click="stopChargingStation()">关机</Button>
+      <Button @click="openConnection()">上线</Button>
+      <Button @click="closeConnection()">下线</Button>
+    </div>
     <div class="line">
       <select name="status" title="Connector Status" v-model="state.status">
         <option value="Available">Available</option>
@@ -40,11 +40,17 @@
     >
       Start Transaction
     </IdTagInputModal> -->
-    <!-- <Button @click="startTransaction()">Start Transaction</Button>
-    <Button @click="stopTransaction()">Stop Transaction</Button>
-    <Button @click="startAutomaticTransactionGenerator()">Start ATG</Button>
-    <Button @click="stopAutomaticTransactionGenerator()">Stop ATG</Button>
-    <Button @click="toggleMessages()">显示消息</Button> -->
+    <div class="line">
+      <Button @click="startTransaction()">开始充电</Button>
+      <Button @click="stopTransaction()">结束充电</Button>
+    </div>
+    <div class="line">
+      <Button @click="startAutomaticTransactionGenerator()">启动模拟充电</Button>
+      <Button @click="stopAutomaticTransactionGenerator()">结束模拟充电</Button>
+    </div>
+    <div class="line">
+      <Button @click="toggleMessages()">显示消息</Button>
+    </div>
   </td>
   <td class="cs-table__connector-col">{{ connectorId }}</td>
   <td class="cs-table__status-col">{{ connector.status }}</td>
@@ -101,7 +107,7 @@ function setStatus(): void {
   }
 }
 function setFirmwareStatus(): void {
-  UIClient.getInstance().updateFirmwareStatus(props.hashId, status);
+  UIClient.getInstance().updateFirmwareStatus(props.hashId, state.firmwareStatus);
 }
 function startChargingStation(): void {
   UIClient.getInstance().startChargingStation(props.hashId);
@@ -139,12 +145,17 @@ function stopAutomaticTransactionGenerator(): void {
 .line select {
   height: 24px;
   flex-grow: 1;
-  margin-right: 8px;
   width: 40px;
 }
+
 .line button {
   height: 24px;
 }
+
+.line *+button {
+  margin-left: 8px;
+}
+
 .fs-success {
   color: green;
 }
