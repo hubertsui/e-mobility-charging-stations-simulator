@@ -26,6 +26,8 @@ export enum ProcedureName {
   LIST_CHARGING_STATIONS = 'listChargingStations',
   START_CHARGING_STATION = 'startChargingStation',
   STOP_CHARGING_STATION = 'stopChargingStation',
+  UPDATE_STATUS = 'updateStatus',
+  UPDATE_FIRMWARE_STATUS = 'updateFirmwareStatus',
   LIST_MESSAGES = 'listMessages',
   OPEN_CONNECTION = 'openConnection',
   CLOSE_CONNECTION = 'closeConnection',

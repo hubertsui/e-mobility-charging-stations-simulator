@@ -14,6 +14,8 @@ export enum BroadcastChannelProcedureName {
   CLOSE_CONNECTION = 'closeConnection',
   START_AUTOMATIC_TRANSACTION_GENERATOR = 'startAutomaticTransactionGenerator',
   STOP_AUTOMATIC_TRANSACTION_GENERATOR = 'stopAutomaticTransactionGenerator',
+  UPDATE_STATUS = 'updateStatus',
+  UPDATE_FIRMWARE_STATUS = 'updateFirmwareStatus',
   SET_SUPERVISION_URL = 'setSupervisionUrl',
   START_TRANSACTION = 'startTransaction',
   STOP_TRANSACTION = 'stopTransaction',

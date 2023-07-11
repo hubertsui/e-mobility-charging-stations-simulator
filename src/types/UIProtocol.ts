@@ -33,6 +33,8 @@ export enum ProcedureName {
   LIST_CHARGING_STATIONS = 'listChargingStations',
   START_CHARGING_STATION = 'startChargingStation',
   STOP_CHARGING_STATION = 'stopChargingStation',
+  UPDATE_STATUS = 'updateStatus',
+  UPDATE_FIRMWARE_STATUS = 'updateFirmwareStatus',
   OPEN_CONNECTION = 'openConnection',
   CLOSE_CONNECTION = 'closeConnection',
   START_AUTOMATIC_TRANSACTION_GENERATOR = 'startAutomaticTransactionGenerator',
@@ -53,6 +55,7 @@ export enum ProcedureName {
 export interface RequestPayload extends JsonObject {
   hashIds?: string[];
   connectorIds?: number[];
+  status?: string;
 }
 
 export enum ResponseStatus {

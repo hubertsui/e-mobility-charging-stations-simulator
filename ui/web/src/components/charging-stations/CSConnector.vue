@@ -1,10 +1,16 @@
 <template>
   <td class="cs-table__action-col">
-    <Button @click="startChargingStation()">Start Charging Station</Button>
-    <Button @click="stopChargingStation()">Stop Charging Station</Button>
-    <Button @click="openConnection()">Open Connection</Button>
-    <Button @click="closeConnection()">Close Connection</Button>
-    <Button @click="startTransaction()">Start Transaction</Button>
+    <Button @click="startChargingStation()">开机</Button>
+    <Button @click="stopChargingStation()">关机</Button>
+    <Button @click="openConnection()">上线</Button>
+    <Button @click="closeConnection()">下线</Button>
+    <Button @click="setStatus('Charging')">插枪</Button>
+    <Button @click="setStatus('Available')">拔枪</Button>
+    <Button @click="setFirmwareStatus('Downloading')">固件下载中</Button>
+    <Button @click="setFirmwareStatus('DownloadFailed')">固件下载失败</Button>
+    <Button @click="setFirmwareStatus('InstallationFailed')">固件安装失败</Button>
+    <Button @click="setFirmwareStatus('Installed')">已安装</Button>
+    <!-- <Button @click="startTransaction()">Start Transaction</Button> -->
     <!-- <IdTagInputModal
       :visibility="state.isIdTagModalVisible"
       :id-tag="state.idTag"
@@ -12,11 +18,11 @@
       @done="Utils.compose(state.transaction, hideIdTagModal)()"
     >
       Start Transaction
-    </IdTagInputModal> -->
-    <Button @click="stopTransaction()">Stop Transaction</Button>
-    <Button @click="startAutomaticTransactionGenerator()">Start ATG</Button>
-    <Button @click="stopAutomaticTransactionGenerator()">Stop ATG</Button>
-    <Button @click="toggleMessages()">Toggle Messages</Button>
+    </IdTagInputModal> --> 
+    <!-- <Button @click="stopTransaction()">Stop Transaction</Button> -->
+    <!-- <Button @click="startAutomaticTransactionGenerator()">Start ATG</Button>
+    <Button @click="stopAutomaticTransactionGenerator()">Stop ATG</Button> -->
+    <!-- <Button @click="toggleMessages()">Toggle Messages</Button> -->
   </td>
   <td class="cs-table__connector-col">{{ connectorId }}</td>
   <td class="cs-table__status-col">{{ connector.status }}</td>
@@ -68,6 +74,12 @@ function toggleMessages() {
 //   state.isIdTagModalVisible = false;
 // }
 
+function setStatus(status:string): void {
+  UIClient.getInstance().updateStatus(props.hashId, status);
+}
+function setFirmwareStatus(status:string): void {
+  UIClient.getInstance().updateFirmwareStatus(props.hashId, status);
+}
 function startChargingStation(): void {
   UIClient.getInstance().startChargingStation(props.hashId);
 }

@@ -85,6 +85,7 @@ import {
   WebSocketCloseEventStatusCode,
   type WsOptions,
   OCPP16ChargePointStatus,
+  OCPP16FirmwareStatus,
 } from '../types';
 import {
   ACElectricUtils,
@@ -167,8 +168,7 @@ export class ChargingStation {
 
   private get wsConnectionUrl(): URL {
     return new URL(
-      `${
-        this.getSupervisionUrlOcppConfiguration() &&
+      `${this.getSupervisionUrlOcppConfiguration() &&
         Utils.isNotEmptyString(this.getSupervisionUrlOcppKey()) &&
         Utils.isNotEmptyString(
           ChargingStationConfigurationUtils.getConfigurationKey(
@@ -176,22 +176,21 @@ export class ChargingStation {
             this.getSupervisionUrlOcppKey()
           )?.value
         )
-          ? ChargingStationConfigurationUtils.getConfigurationKey(
-              this,
-              this.getSupervisionUrlOcppKey()
-            ).value
-          : this.configuredSupervisionUrl.href
+        ? ChargingStationConfigurationUtils.getConfigurationKey(
+          this,
+          this.getSupervisionUrlOcppKey()
+        ).value
+        : this.configuredSupervisionUrl.href
       }/${this.stationInfo.chargingStationId}`
     );
   }
 
   public logPrefix = (): string => {
     return Utils.logPrefix(
-      ` ${
-        (Utils.isNotEmptyString(this?.stationInfo?.chargingStationId)
-          ? this?.stationInfo?.chargingStationId
-          : ChargingStationUtils.getChargingStationId(this.index, this.getTemplateFromFile())) ??
-        'Error at building log prefix'
+      ` ${(Utils.isNotEmptyString(this?.stationInfo?.chargingStationId)
+        ? this?.stationInfo?.chargingStationId
+        : ChargingStationUtils.getChargingStationId(this.index, this.getTemplateFromFile())) ??
+      'Error at building log prefix'
       } |`
     );
   };
@@ -284,6 +283,44 @@ export class ChargingStation {
     return this.connectors.get(id).transactionEndToStatus ?? ConnectorStatusEnum.Available;
   }
 
+  public async updateStatus(status: string) {
+    if (status && status.length) {
+      const connectorStatus = OCPP16ChargePointStatus[status]
+      if (connectorStatus) {
+        console.log("do update status", connectorStatus);
+        for (const connectorId of this.connectors.keys()) {
+          if (connectorId > 0) {
+            await OCPPServiceUtils.sendAndSetConnectorStatus(
+              this,
+              connectorId,
+              connectorStatus,
+              null,
+              { send: true }
+            );
+          }
+        }
+        this.saveConfiguration();
+      }
+    }
+  }
+
+  public async updateFirmwareStatus(status: string) {
+    if (status && status.length) {
+      const firmwareStatus = OCPP16FirmwareStatus[status]
+      if (firmwareStatus) {
+        console.log("do update firmware status", firmwareStatus);
+        this.stationInfo.firmwareStatus = firmwareStatus;
+        this.saveConfiguration();
+        await this.ocppRequestService.requestHandler<
+          FirmwareStatusNotificationRequest,
+          FirmwareStatusNotificationResponse
+        >(this, RequestCommand.FIRMWARE_STATUS_NOTIFICATION, {
+          status: firmwareStatus,
+        });
+      }
+    }
+  }
+
   public getNumberOfConnectors(): number {
     if (this.hasEvses) {
       let numberOfConnectors = 0;
@@ -344,11 +381,11 @@ export class ChargingStation {
       connectorAmperageLimitationPowerLimit =
         (this.getCurrentOutType() === CurrentType.AC
           ? ACElectricUtils.powerTotal(
-              this.getNumberOfPhases(),
-              this.getVoltageOut(),
-              this.getAmperageLimitation() *
-                (this.hasEvses ? this.getNumberOfEvses() : this.getNumberOfConnectors())
-            )
+            this.getNumberOfPhases(),
+            this.getVoltageOut(),
+            this.getAmperageLimitation() *
+            (this.hasEvses ? this.getNumberOfEvses() : this.getNumberOfConnectors())
+          )
           : DCElectricUtils.power(this.getVoltageOut(), this.getAmperageLimitation())) /
         this.powerDivider;
     }
@@ -500,8 +537,7 @@ export class ChargingStation {
     }
     this.stationInfo?.autoRegister === false &&
       logger.warn(
-        `${this.logPrefix()} Heartbeat interval configuration key not set, using default value: ${
-          Constants.DEFAULT_HEARTBEAT_INTERVAL
+        `${this.logPrefix()} Heartbeat interval configuration key not set, using default value: ${Constants.DEFAULT_HEARTBEAT_INTERVAL
         }`
       );
     return Constants.DEFAULT_HEARTBEAT_INTERVAL;
@@ -627,8 +663,7 @@ export class ChargingStation {
       }, interval);
     } else {
       logger.error(
-        `${this.logPrefix()} Charging station ${
-          StandardParametersKey.MeterValueSampleInterval
+        `${this.logPrefix()} Charging station ${StandardParametersKey.MeterValueSampleInterval
         } configuration set to ${interval}, not sending MeterValues`
       );
     }
@@ -661,8 +696,7 @@ export class ChargingStation {
             if (Utils.isNotEmptyString(filename) && event === 'change') {
               try {
                 logger.debug(
-                  `${this.logPrefix()} ${FileType.ChargingStationTemplate} ${
-                    this.templateFile
+                  `${this.logPrefix()} ${FileType.ChargingStationTemplate} ${this.templateFile
                   } file have changed, reload`
                 );
                 this.sharedLRUCache.deleteChargingStationTemplate(this.templateFileHash);
@@ -1196,8 +1230,7 @@ export class ChargingStation {
       new RegExp(stationInfo.firmwareVersionPattern).test(stationInfo.firmwareVersion) === false
     ) {
       logger.warn(
-        `${this.logPrefix()} Firmware version '${stationInfo.firmwareVersion}' in template file ${
-          this.templateFile
+        `${this.logPrefix()} Firmware version '${stationInfo.firmwareVersion}' in template file ${this.templateFile
         } does not match firmware version pattern '${stationInfo.firmwareVersionPattern}'`
       );
     }
@@ -1576,8 +1609,7 @@ export class ChargingStation {
     }
     if (!stationTemplate?.Connectors[0]) {
       logger.warn(
-        `${this.logPrefix()} Charging station information from template ${
-          this.templateFile
+        `${this.logPrefix()} Charging station information from template ${this.templateFile
         } with no connector id 0 configuration`
       );
     }
@@ -1625,16 +1657,14 @@ export class ChargingStation {
           this.saveConnectorsStatus();
         } else {
           logger.warn(
-            `${this.logPrefix()} Charging station information from template ${
-              this.templateFile
+            `${this.logPrefix()} Charging station information from template ${this.templateFile
             } with no connectors configuration defined, cannot create connectors`
           );
         }
       }
     } else {
       logger.warn(
-        `${this.logPrefix()} Charging station information from template ${
-          this.templateFile
+        `${this.logPrefix()} Charging station information from template ${this.templateFile
         } with no connectors configuration defined, using already defined connectors`
       );
     }
@@ -1648,15 +1678,13 @@ export class ChargingStation {
     }
     if (!stationTemplate?.Evses[0]) {
       logger.warn(
-        `${this.logPrefix()} Charging station information from template ${
-          this.templateFile
+        `${this.logPrefix()} Charging station information from template ${this.templateFile
         } with no evse id 0 configuration`
       );
     }
     if (!stationTemplate?.Evses[0]?.Connectors[0]) {
       logger.warn(
-        `${this.logPrefix()} Charging station information from template ${
-          this.templateFile
+        `${this.logPrefix()} Charging station information from template ${this.templateFile
         } with evse id 0 with no connector id 0 configuration`
       );
     }
@@ -1690,16 +1718,14 @@ export class ChargingStation {
           this.saveEvsesStatus();
         } else {
           logger.warn(
-            `${this.logPrefix()} Charging station information from template ${
-              this.templateFile
+            `${this.logPrefix()} Charging station information from template ${this.templateFile
             } with no evses configuration defined, cannot create evses`
           );
         }
       }
     } else {
       logger.warn(
-        `${this.logPrefix()} Charging station information from template ${
-          this.templateFile
+        `${this.logPrefix()} Charging station information from template ${this.templateFile
         } with no evses configuration defined, using already defined evses`
       );
     }
@@ -1825,8 +1851,7 @@ export class ChargingStation {
             });
         } else {
           logger.debug(
-            `${this.logPrefix()} Not saving unchanged charging station configuration file ${
-              this.configurationFile
+            `${this.logPrefix()} Not saving unchanged charging station configuration file ${this.configurationFile
             }`
           );
         }
@@ -1851,7 +1876,7 @@ export class ChargingStation {
 
   private getOcppConfigurationFromFile(): ChargingStationOcppConfiguration | undefined {
     var config = this.getConfigurationFromFile();
-    if(config?.stationInfo?.messages) {
+    if (config?.stationInfo?.messages) {
       console.log('reset messages');
       config.stationInfo.messages = [];
     }
@@ -1959,9 +1984,9 @@ export class ChargingStation {
     );
   }
 
-  public addMessage(msg:MessageLog) {
-    if(this.stationInfo != null) {
-      if(!this.stationInfo.messages) {
+  public addMessage(msg: MessageLog) {
+    if (this.stationInfo != null) {
+      if (!this.stationInfo.messages) {
         this.stationInfo.messages = [];
       }
       this.stationInfo.messages.push(msg);
@@ -2018,8 +2043,7 @@ export class ChargingStation {
       success: true,
     });
     logger.debug(
-      `${this.logPrefix()} << Command '${
-        requestCommandName ?? Constants.UNKNOWN_COMMAND
+      `${this.logPrefix()} << Command '${requestCommandName ?? Constants.UNKNOWN_COMMAND
       }' received response payload: ${JSON.stringify(response)}`
     );
     responseCallback(commandPayload, requestPayload);
@@ -2045,8 +2069,7 @@ export class ChargingStation {
       success: true,
     });
     logger.debug(
-      `${this.logPrefix()} << Command '${
-        requestCommandName ?? Constants.UNKNOWN_COMMAND
+      `${this.logPrefix()} << Command '${requestCommandName ?? Constants.UNKNOWN_COMMAND
       }' received error response payload: ${JSON.stringify(errorResponse)}`
     );
     errorCallback(new OCPPError(errorType, errorMessage, requestCommandName, errorDetails));
@@ -2112,19 +2135,16 @@ export class ChargingStation {
       }
       if (error instanceof OCPPError === false) {
         logger.warn(
-          `${this.logPrefix()} Error thrown at incoming OCPP command '${
-            commandName ?? requestCommandName ?? Constants.UNKNOWN_COMMAND
+          `${this.logPrefix()} Error thrown at incoming OCPP command '${commandName ?? requestCommandName ?? Constants.UNKNOWN_COMMAND
           }' message '${data.toString()}' handling is not an OCPPError:`,
           error
         );
       }
       logger.error(
-        `${this.logPrefix()} Incoming OCPP command '${
-          commandName ?? requestCommandName ?? Constants.UNKNOWN_COMMAND
-        }' message '${data.toString()}'${
-          messageType !== MessageType.CALL_MESSAGE
-            ? ` matching cached request '${JSON.stringify(this.requests.get(messageId))}'`
-            : ''
+        `${this.logPrefix()} Incoming OCPP command '${commandName ?? requestCommandName ?? Constants.UNKNOWN_COMMAND
+        }' message '${data.toString()}'${messageType !== MessageType.CALL_MESSAGE
+          ? ` matching cached request '${JSON.stringify(this.requests.get(messageId))}'`
+          : ''
         } processing error:`,
         error
       );
@@ -2389,11 +2409,11 @@ export class ChargingStation {
       StandardParametersKey.WebSocketPingInterval
     )
       ? Utils.convertToInt(
-          ChargingStationConfigurationUtils.getConfigurationKey(
-            this,
-            StandardParametersKey.WebSocketPingInterval
-          )?.value
-        )
+        ChargingStationConfigurationUtils.getConfigurationKey(
+          this,
+          StandardParametersKey.WebSocketPingInterval
+        )?.value
+      )
       : 0;
     if (webSocketPingInterval > 0 && !this.webSocketPingSetInterval) {
       this.webSocketPingSetInterval = setInterval(() => {
@@ -2442,8 +2462,7 @@ export class ChargingStation {
             Configuration.getSupervisionUrlDistribution()
           ) === false &&
             logger.error(
-              `${this.logPrefix()} Unknown supervision url distribution '${Configuration.getSupervisionUrlDistribution()}' from values '${SupervisionUrlDistribution.toString()}', defaulting to ${
-                SupervisionUrlDistribution.CHARGING_STATION_AFFINITY
+              `${this.logPrefix()} Unknown supervision url distribution '${Configuration.getSupervisionUrlDistribution()}' from values '${SupervisionUrlDistribution.toString()}', defaulting to ${SupervisionUrlDistribution.CHARGING_STATION_AFFINITY
               }`
             );
           configuredSupervisionUrlIndex = (this.index - 1) % supervisionUrls.length;
@@ -2521,8 +2540,7 @@ export class ChargingStation {
       this.wsConnectionRestarted = true;
     } else if (this.getAutoReconnectMaxRetries() !== -1) {
       logger.error(
-        `${this.logPrefix()} WebSocket connection retries failure: maximum retries reached (${
-          this.autoReconnectRetryCount
+        `${this.logPrefix()} WebSocket connection retries failure: maximum retries reached (${this.autoReconnectRetryCount
         }) or retries disabled (${this.getAutoReconnectMaxRetries()})`
       );
     }

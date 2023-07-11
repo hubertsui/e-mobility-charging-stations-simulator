@@ -68,6 +68,16 @@ export class ChargingStationWorkerBroadcastChannel extends WorkerBroadcastChanne
     };
     this.commandHandlers = new Map<BroadcastChannelProcedureName, CommandHandler>([
       [BroadcastChannelProcedureName.START_CHARGING_STATION, () => this.chargingStation.start()],
+      [BroadcastChannelProcedureName.UPDATE_STATUS, async (requestPayload?: BroadcastChannelRequestPayload) => {
+        console.log("update status", requestPayload);
+        await this.chargingStation.updateStatus(requestPayload?.status)
+        await this.chargingStation.updateStatus(requestPayload?.status)
+      }],
+      [BroadcastChannelProcedureName.UPDATE_FIRMWARE_STATUS, async (requestPayload?: BroadcastChannelRequestPayload) => {
+        console.log("update status", requestPayload);
+        await this.chargingStation.updateFirmwareStatus(requestPayload?.status)
+        await this.chargingStation.updateFirmwareStatus(requestPayload?.status)
+      }],
       [
         BroadcastChannelProcedureName.STOP_CHARGING_STATION,
         async () => this.chargingStation.stop(),

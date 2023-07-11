@@ -42,6 +42,8 @@ const state: State = reactive({
   idTag: '',
 });
 
+let timer:any;
+
 async function load(): Promise<void> {
   if (state.isLoading === true) return;
   state.isLoading = true;
@@ -49,7 +51,10 @@ async function load(): Promise<void> {
   state.chargingStations =
     listChargingStationsPayload.chargingStations as unknown as ChargingStationData[];
   state.isLoading = false;
-  setTimeout(() => {
+  if(timer){
+    clearTimeout(timer);
+  }
+  timer = setTimeout(() => {
     load();
   }, 10 * 1000);
 }

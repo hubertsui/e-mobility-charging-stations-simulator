@@ -60,6 +60,14 @@ export default class UIClient {
     return this.sendRequest(ProcedureName.STOP_CHARGING_STATION, { hashIds: [hashId] });
   }
 
+  public async updateStatus(hashId: string, status: string): Promise<ResponsePayload> {
+    return this.sendRequest(ProcedureName.UPDATE_STATUS, { hashIds: [hashId] , status});
+  }
+
+  public async updateFirmwareStatus(hashId: string, status: string): Promise<ResponsePayload> {
+    return this.sendRequest(ProcedureName.UPDATE_FIRMWARE_STATUS, { hashIds: [hashId] , status});
+  }
+
   public async openConnection(hashId: string): Promise<ResponsePayload> {
     return this.sendRequest(ProcedureName.OPEN_CONNECTION, {
       hashIds: [hashId],

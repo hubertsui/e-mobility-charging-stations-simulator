@@ -1,5 +1,8 @@
 {
-  "supervisionUrls": ["ws://localhost:8010/OCPP16/5be7fb271014d90008992f06"],
+  "supervisionUrls": [
+    "ws://39.98.80.50:16667/ocpp/12sxpKkdMFY4eLUkM9B4TmrDJWz6AsNi", // 标准-测试环境
+    "ws://47.92.76.47:16667/ocpp/MKRa85UcfsWZ1afwyNFmk5AysOTCIurF" // 标准-开发联调环境
+  ],
   "supervisionUrlDistribution": "round-robin",
   "log": {
     "file": "logs/combined.log",

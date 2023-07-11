@@ -3,6 +3,8 @@
   "baseName": "095e470eb0f9477ab95496aa81dd85c6",
   "fixedName": true,
   "firmwareVersion": "V1.0.1",
+  "firmwareVersionPattern": "^.+$",
+  "firmwareStatus": "Installed",
   "chargePointModel": "Simulator simple",
   "chargePointVendor": "Ovomaltin",
   "power": 7500,
@@ -29,7 +31,7 @@
       {
         "key": "SupportedFeatureProfiles",
         "readonly": true,
-        "value": "Core,FirmwareManagement,LocalAuthListManagement"
+        "value": "Core,FirmwareManagement,RemoteTrigger,LocalAuthListManagement"
       },
       {
         "key": "LocalAuthListEnabled",
@@ -62,9 +64,9 @@
   "Connectors": {
     "0": {},
     "1": {
-      "bootStatus": "Preparing",
+      "bootStatus": "Available",
       "bootErrorCode": "GroundFailure",
-      "transactionEndToStatus": "Preparing",
+      "transactionEndToStatus": "Available",
       "energyActiveImportRegisterValue": 1837,
       "transactionEnergyActiveImportRegisterValue": 1832,
       "MeterValues": [
