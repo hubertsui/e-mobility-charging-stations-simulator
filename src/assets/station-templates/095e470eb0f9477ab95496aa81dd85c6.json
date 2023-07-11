@@ -5,6 +5,9 @@
   "firmwareVersion": "V1.0.1",
   "firmwareVersionPattern": "^.+$",
   "firmwareStatus": "Installed",
+  "firmwareUpgrade":{
+    
+  },
   "chargePointModel": "Simulator simple",
   "chargePointVendor": "Ovomaltin",
   "power": 7500,

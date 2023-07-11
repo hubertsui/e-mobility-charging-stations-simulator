@@ -1108,6 +1108,12 @@ export class OCPP16IncomingRequestService extends OCPPIncomingRequestService {
     ) {
       return;
     }
+    // 
+    if (
+      chargingStation.stationInfo?.firmwareUpgrade?.manual === true
+    ) {
+      return;
+    }
     if (chargingStation.hasEvses) {
       for (const [evseId, evseStatus] of chargingStation.evses) {
         if (evseId > 0) {

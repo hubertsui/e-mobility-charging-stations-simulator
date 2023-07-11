@@ -106,6 +106,10 @@ const props = defineProps<{
   word-break: break-all;
 }
 
+.cs-table__action-col{
+  width: 30%;
+}
+
 .message-container {
   overflow-y: auto;
   max-height: 500px;

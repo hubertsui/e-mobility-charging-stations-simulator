@@ -283,11 +283,10 @@ export class ChargingStation {
     return this.connectors.get(id).transactionEndToStatus ?? ConnectorStatusEnum.Available;
   }
 
-  public async updateStatus(status: string) {
-    if (status && status.length) {
+  public async updateStatus(status?: string) {
+    if (status?.length) {
       const connectorStatus = OCPP16ChargePointStatus[status]
       if (connectorStatus) {
-        console.log("do update status", connectorStatus);
         for (const connectorId of this.connectors.keys()) {
           if (connectorId > 0) {
             await OCPPServiceUtils.sendAndSetConnectorStatus(
@@ -305,10 +304,9 @@ export class ChargingStation {
   }
 
   public async updateFirmwareStatus(status: string) {
-    if (status && status.length) {
+    if (status?.length) {
       const firmwareStatus = OCPP16FirmwareStatus[status]
       if (firmwareStatus) {
-        console.log("do update firmware status", firmwareStatus);
         this.stationInfo.firmwareStatus = firmwareStatus;
         this.saveConfiguration();
         await this.ocppRequestService.requestHandler<
@@ -1877,7 +1875,6 @@ export class ChargingStation {
   private getOcppConfigurationFromFile(): ChargingStationOcppConfiguration | undefined {
     var config = this.getConfigurationFromFile();
     if (config?.stationInfo?.messages) {
-      console.log('reset messages');
       config.stationInfo.messages = [];
     }
     const configurationKey = config?.configurationKey;

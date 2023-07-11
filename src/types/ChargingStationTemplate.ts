@@ -48,6 +48,7 @@ export type FirmwareUpgrade = {
   };
   reset?: boolean;
   failureStatus?: FirmwareStatus;
+  manual?: boolean;
 };
 
 type CommandsSupport = {
