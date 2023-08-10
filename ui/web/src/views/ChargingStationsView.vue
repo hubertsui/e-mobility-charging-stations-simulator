@@ -1,15 +1,15 @@
 <template>
   <Container id="charging-stations">
-    <Button id="simulator-button" @click="startSimulator()">Start Simulator</Button>
-    <Button id="simulator-button" @click="stopSimulator()">Stop Simulator</Button>
+    <!-- <Button id="simulator-button" @click="startSimulator()">Start Simulator</Button>
+    <Button id="simulator-button" @click="stopSimulator()">Stop Simulator</Button> -->
     <Container id="inputs-container">
-      <input
+      <!-- <input
         id="idtag-field"
         v-model="state.idTag"
         type="text"
         name="idtag-field"
         placeholder="RFID tag"
-      />
+      /> -->
       <ReloadButton id="reload-button" :loading="state.isLoading" @click="load()" />
     </Container>
     <CSTable :charging-stations="state.chargingStations" :id-tag="state.idTag" />

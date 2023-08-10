@@ -1,4 +1,4 @@
-import { type RouteRecordRaw, createRouter, createWebHistory } from 'vue-router';
+import { type RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
 import ChargingStationsView from '@/views/ChargingStationsView.vue';
 
 const routes: RouteRecordRaw[] = [
@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 

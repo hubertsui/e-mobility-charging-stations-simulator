@@ -32,14 +32,6 @@
       </select>
       <Button @click="setFirmwareStatus()">更新固件状态</Button>
     </div>
-    <!-- <IdTagInputModal
-      :visibility="state.isIdTagModalVisible"
-      :id-tag="state.idTag"
-      @close="hideIdTagModal()"
-      @done="Utils.compose(state.transaction, hideIdTagModal)()"
-    >
-      Start Transaction
-    </IdTagInputModal> -->
     <div class="line">
       <Button @click="startTransaction()">开始充电</Button>
       <Button @click="stopTransaction()">结束充电</Button>
