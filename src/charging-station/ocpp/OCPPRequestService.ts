@@ -371,12 +371,26 @@ export abstract class OCPPRequestService {
             const beginId = PerformanceStatistics.beginMeasure(commandName);
             try {
               chargingStation.wsConnection?.send(messageToSend);
+              chargingStation.addMessage({
+                type: 'send',
+                time: new Date(),
+                payload: messageToSend,
+                name: commandName,
+                success: true,
+              });
               logger.debug(
                 `${chargingStation.logPrefix()} >> Command '${commandName}' sent ${OCPPServiceUtils.getMessageTypeString(
                   messageType,
                 )} payload: ${messageToSend}`,
               );
             } catch (error) {
+              chargingStation.addMessage({
+                type: 'send',
+                time: new Date(),
+                payload: messageToSend,
+                name: commandName,
+                success: false,
+              });
               logger.error(
                 `${chargingStation.logPrefix()} >> Command '${commandName}' failed to send ${OCPPServiceUtils.getMessageTypeString(
                   messageType,

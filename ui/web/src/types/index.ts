@@ -2,6 +2,7 @@ export type {
   ChargingStationData,
   ChargingStationInfo,
   ConnectorStatus,
+  MessageLog,
 } from './ChargingStationType';
 export type { BaseConfig } from './ConfigurationType';
 export {

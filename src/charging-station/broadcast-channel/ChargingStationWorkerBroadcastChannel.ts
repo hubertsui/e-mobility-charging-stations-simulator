@@ -12,12 +12,14 @@ import {
   type BroadcastChannelRequest,
   type BroadcastChannelRequestPayload,
   type BroadcastChannelResponsePayload,
+  ConnectorStatusEnum,
   type DataTransferRequest,
   type DataTransferResponse,
   DataTransferStatus,
   type DiagnosticsStatusNotificationRequest,
   type DiagnosticsStatusNotificationResponse,
   type EmptyObject,
+  FirmwareStatus,
   type FirmwareStatusNotificationRequest,
   type FirmwareStatusNotificationResponse,
   type HeartbeatRequest,
@@ -94,6 +96,23 @@ export class ChargingStationWorkerBroadcastChannel extends WorkerBroadcastChanne
         BroadcastChannelProcedureName.SET_SUPERVISION_URL,
         (requestPayload?: BroadcastChannelRequestPayload) =>
           this.chargingStation.setSupervisionUrl(requestPayload?.url as string),
+      ],
+      [
+        BroadcastChannelProcedureName.UPDATE_STATUS,
+        async (requestPayload?: BroadcastChannelRequestPayload) => {
+          console.log('update status', requestPayload);
+          await this.chargingStation.updateStatus(
+            requestPayload?.status as ConnectorStatusEnum,
+            requestPayload?.connectorId,
+          );
+        },
+      ],
+      [
+        BroadcastChannelProcedureName.UPDATE_FIRMWARE_STATUS,
+        async (requestPayload?: BroadcastChannelRequestPayload) => {
+          console.log('update firmware status', requestPayload);
+          await this.chargingStation.updateFirmwareStatus(requestPayload?.status as FirmwareStatus);
+        },
       ],
       [
         BroadcastChannelProcedureName.START_TRANSACTION,

@@ -99,6 +99,10 @@ export default {
         'assets/ui-protocol/**/*',
       ],
     }),
+    copy({
+      rootDir: 'ui/web',
+      patterns: ['dist/*', 'dist/*/*'],
+    }),
     isAnalyzeBuild && analyze(),
   ],
 };

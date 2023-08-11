@@ -25,6 +25,8 @@ export enum BroadcastChannelProcedureName {
   DATA_TRANSFER = 'dataTransfer',
   DIAGNOSTICS_STATUS_NOTIFICATION = 'diagnosticsStatusNotification',
   FIRMWARE_STATUS_NOTIFICATION = 'firmwareStatusNotification',
+  UPDATE_STATUS = 'updateStatus',
+  UPDATE_FIRMWARE_STATUS = 'updateFirmwareStatus',
 }
 
 export interface BroadcastChannelRequestPayload extends RequestPayload {
