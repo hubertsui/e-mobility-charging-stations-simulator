@@ -81,6 +81,7 @@ export interface ChargingStationTemplate {
   wsOptions?: WsOptions;
   idTagsFile?: string;
   baseName: string;
+  displayName?: string;
   nameSuffix?: string;
   fixedName?: boolean;
   chargePointModel: string;

@@ -45,8 +45,11 @@
     </div>
   </td>
   <td class="cs-table__connector-col">{{ connectorId }}</td>
+  <td class="cs-table__connector-name-col">{{ connector.displayName }}</td>
   <td class="cs-table__status-col">{{ connector.status }}</td>
-  <td class="cs-table__transaction-col">{{ connector.transactionStarted ? 'Yes' : 'No' }}</td>
+  <td class="cs-table__transaction-col">
+    {{ connector.transactionStarted ? '充电中' : '未充电' }}
+  </td>
 </template>
 
 <script setup lang="ts">

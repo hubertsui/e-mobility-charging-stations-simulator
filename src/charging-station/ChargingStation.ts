@@ -253,6 +253,7 @@ export class ChargingStation {
           );
         }
         this.saveConfiguration();
+        this.saveStationInfo();
       }
     }
   }
@@ -269,6 +270,7 @@ export class ChargingStation {
         >(this, RequestCommand.FIRMWARE_STATUS_NOTIFICATION, {
           status: firmwareStatus,
         });
+        this.saveStationInfo();
       }
     }
   }
@@ -1059,6 +1061,63 @@ export class ChargingStation {
       }
       this.stationInfo.messages.push(msg);
     }
+  }
+
+  public async startMessageSequence(): Promise<void> {
+    if (this.stationInfo?.autoRegister === true) {
+      await this.ocppRequestService.requestHandler<
+        BootNotificationRequest,
+        BootNotificationResponse
+      >(this, RequestCommand.BOOT_NOTIFICATION, this.bootNotificationRequest, {
+        skipBufferingOnError: true,
+      });
+    }
+    // Start WebSocket ping
+    this.startWebSocketPing();
+    // Start heartbeat
+    this.startHeartbeat();
+    // Initialize connectors status
+    if (this.hasEvses) {
+      for (const [evseId, evseStatus] of this.evses) {
+        if (evseId > 0) {
+          for (const [connectorId, connectorStatus] of evseStatus.connectors) {
+            const connectorBootStatus = getBootConnectorStatus(this, connectorId, connectorStatus);
+            await OCPPServiceUtils.sendAndSetConnectorStatus(
+              this,
+              connectorId,
+              connectorBootStatus,
+              evseId,
+            );
+          }
+        }
+      }
+    } else {
+      for (const connectorId of this.connectors.keys()) {
+        if (connectorId > 0) {
+          const connectorBootStatus = getBootConnectorStatus(
+            this,
+            connectorId,
+            this.getConnectorStatus(connectorId)!,
+          );
+          await OCPPServiceUtils.sendAndSetConnectorStatus(this, connectorId, connectorBootStatus);
+        }
+      }
+    }
+    if (this.stationInfo?.firmwareStatus === FirmwareStatus.Installing) {
+      await this.ocppRequestService.requestHandler<
+        FirmwareStatusNotificationRequest,
+        FirmwareStatusNotificationResponse
+      >(this, RequestCommand.FIRMWARE_STATUS_NOTIFICATION, {
+        status: FirmwareStatus.Installed,
+      });
+      this.stationInfo.firmwareStatus = FirmwareStatus.Installed;
+    }
+
+    // Start the ATG
+    if (this.getAutomaticTransactionGeneratorConfiguration()?.enable === true) {
+      this.startAutomaticTransactionGenerator();
+    }
+    this.wsConnectionRestarted === true && this.flushMessageBuffer();
   }
 
   private startReservationExpirationSetInterval(customInterval?: number): void {
@@ -2170,63 +2229,6 @@ export class ChargingStation {
         ) / getAmperageLimitationUnitDivider(this.stationInfo)
       );
     }
-  }
-
-  private async startMessageSequence(): Promise<void> {
-    if (this.stationInfo?.autoRegister === true) {
-      await this.ocppRequestService.requestHandler<
-        BootNotificationRequest,
-        BootNotificationResponse
-      >(this, RequestCommand.BOOT_NOTIFICATION, this.bootNotificationRequest, {
-        skipBufferingOnError: true,
-      });
-    }
-    // Start WebSocket ping
-    this.startWebSocketPing();
-    // Start heartbeat
-    this.startHeartbeat();
-    // Initialize connectors status
-    if (this.hasEvses) {
-      for (const [evseId, evseStatus] of this.evses) {
-        if (evseId > 0) {
-          for (const [connectorId, connectorStatus] of evseStatus.connectors) {
-            const connectorBootStatus = getBootConnectorStatus(this, connectorId, connectorStatus);
-            await OCPPServiceUtils.sendAndSetConnectorStatus(
-              this,
-              connectorId,
-              connectorBootStatus,
-              evseId,
-            );
-          }
-        }
-      }
-    } else {
-      for (const connectorId of this.connectors.keys()) {
-        if (connectorId > 0) {
-          const connectorBootStatus = getBootConnectorStatus(
-            this,
-            connectorId,
-            this.getConnectorStatus(connectorId)!,
-          );
-          await OCPPServiceUtils.sendAndSetConnectorStatus(this, connectorId, connectorBootStatus);
-        }
-      }
-    }
-    if (this.stationInfo?.firmwareStatus === FirmwareStatus.Installing) {
-      await this.ocppRequestService.requestHandler<
-        FirmwareStatusNotificationRequest,
-        FirmwareStatusNotificationResponse
-      >(this, RequestCommand.FIRMWARE_STATUS_NOTIFICATION, {
-        status: FirmwareStatus.Installed,
-      });
-      this.stationInfo.firmwareStatus = FirmwareStatus.Installed;
-    }
-
-    // Start the ATG
-    if (this.getAutomaticTransactionGeneratorConfiguration()?.enable === true) {
-      this.startAutomaticTransactionGenerator();
-    }
-    this.wsConnectionRestarted === true && this.flushMessageBuffer();
   }
 
   private async stopMessageSequence(

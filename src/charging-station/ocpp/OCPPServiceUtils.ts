@@ -206,6 +206,7 @@ export class OCPPServiceUtils {
     options?: { send: boolean },
   ) {
     options = { send: true, ...options };
+    chargingStation.getConnectorStatus(connectorId)!.status = status;
     if (options.send) {
       OCPPServiceUtils.checkConnectorStatusTransition(chargingStation, connectorId, status);
       await chargingStation.ocppRequestService.requestHandler<
@@ -222,7 +223,6 @@ export class OCPPServiceUtils {
         ),
       );
     }
-    chargingStation.getConnectorStatus(connectorId)!.status = status;
   }
 
   public static async isIdTagAuthorized(

@@ -100,17 +100,15 @@ export class ChargingStationWorkerBroadcastChannel extends WorkerBroadcastChanne
       [
         BroadcastChannelProcedureName.UPDATE_STATUS,
         async (requestPayload?: BroadcastChannelRequestPayload) => {
-          console.log('update status', requestPayload);
           await this.chargingStation.updateStatus(
             requestPayload?.status as ConnectorStatusEnum,
-            requestPayload?.connectorId,
+            requestPayload?.connectorIds?.[0],
           );
         },
       ],
       [
         BroadcastChannelProcedureName.UPDATE_FIRMWARE_STATUS,
         async (requestPayload?: BroadcastChannelRequestPayload) => {
-          console.log('update firmware status', requestPayload);
           await this.chargingStation.updateFirmwareStatus(requestPayload?.status as FirmwareStatus);
         },
       ],
@@ -348,6 +346,7 @@ export class ChargingStationWorkerBroadcastChannel extends WorkerBroadcastChanne
     [
       BroadcastChannelProcedureName.START_AUTOMATIC_TRANSACTION_GENERATOR,
       BroadcastChannelProcedureName.STOP_AUTOMATIC_TRANSACTION_GENERATOR,
+      BroadcastChannelProcedureName.UPDATE_STATUS,
     ].includes(command) === false && delete requestPayload.connectorIds;
   }
 

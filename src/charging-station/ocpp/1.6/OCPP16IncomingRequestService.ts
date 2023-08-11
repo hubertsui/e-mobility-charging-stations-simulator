@@ -81,6 +81,7 @@ import {
   type OCPP16UpdateFirmwareResponse,
   type OCPPConfigurationKey,
   OCPPVersion,
+  RegistrationStatusEnumType,
   type RemoteStartTransactionRequest,
   type RemoteStopTransactionRequest,
   ReservationTerminationReason,
@@ -1448,7 +1449,16 @@ export class OCPP16IncomingRequestService extends OCPPIncomingRequestService {
                 { skipBufferingOnError: true, triggerMessage: true },
               )
               .then((response) => {
-                chargingStation.bootNotificationResponse = response;
+                if (
+                  chargingStation.bootNotificationResponse?.status ===
+                    RegistrationStatusEnumType.PENDING &&
+                  response.status === RegistrationStatusEnumType.ACCEPTED
+                ) {
+                  chargingStation.bootNotificationResponse = response;
+                  chargingStation.startMessageSequence().catch(Constants.EMPTY_FUNCTION);
+                } else {
+                  chargingStation.bootNotificationResponse = response;
+                }
               })
               .catch(Constants.EMPTY_FUNCTION);
           }, OCPP16Constants.OCPP_TRIGGER_MESSAGE_DELAY);

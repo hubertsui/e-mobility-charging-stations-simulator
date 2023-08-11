@@ -26,6 +26,7 @@ export type ChargingStationInfo = {
   hashId: string;
   chargingStationId?: string;
   chargePointModel: string;
+  displayName?: string;
   chargePointVendor: string;
   firmwareVersionPattern?: string;
   firmwareVersion?: string;
@@ -183,6 +184,7 @@ export type ConnectorStatus = {
   bootStatus?: ChargePointStatus;
   status?: ChargePointStatus;
   authorizeIdTag?: string;
+  displayName?: string;
   idTagAuthorized?: boolean;
   localAuthorizeIdTag?: string;
   idTagLocalAuthorized?: boolean;

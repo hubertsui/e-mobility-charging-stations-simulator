@@ -9,14 +9,14 @@
         :id-tag="props.idTag"
         @toggle-messages="toggleMessages()"
       />
-      <td class="cs-table__firmwarestatus-col">{{ getFirmwareStatus() }}</td>
       <td class="cs-table__name-col">{{ getId() }}</td>
-      <td class="cs-table__started-col">{{ getStarted() }}</td>
-      <td class="cs-table__wsState-col">{{ getWsState() }}</td>
-      <td class="cs-table__registration-status-col">{{ getRegistrationStatus() }}</td>
-      <td class="cs-table__vendor-col">{{ getVendor() }}</td>
-      <td class="cs-table__model-col">{{ getModel() }}</td>
+      <td class="cs-table__display-name-col">{{ getDisplayName() }}</td>
+      <td class="cs-table__started-col">
+        {{ getStarted() }}<br />{{ getWsState() }}<br />{{ getRegistrationStatus() }}
+      </td>
+      <td class="cs-table__vendor-col">{{ getVendor() }}<br />{{ getModel() }}</td>
       <td class="cs-table__firmware-col">{{ getFirmwareVersion() }}</td>
+      <td class="cs-table__firmwarestatus-col">{{ getFirmwareStatus() }}</td>
     </tr>
     <tr v-if="state.isMessagesVisible" class="cs-table__row">
       <td class="cs-table__messages-col" colspan="12">
@@ -86,6 +86,9 @@ function getHashId(): string {
 function getId(): string {
   return ifUndefined<string>(getInfo().chargingStationId, 'Ø');
 }
+function getDisplayName(): string {
+  return getInfo().displayName;
+}
 function getModel(): string {
   return getInfo().chargePointModel;
 }
@@ -102,20 +105,20 @@ function getFirmwareVersion(): string {
   return ifUndefined<string>(getInfo().firmwareVersion, 'Ø');
 }
 function getStarted(): string {
-  return props.chargingStation.started === true ? 'Yes' : 'No';
+  return props.chargingStation.started === true ? '运行中' : '关机';
 }
 function getWsState(): string {
   switch (props.chargingStation?.wsState) {
     case WebSocket.CONNECTING:
-      return 'Connecting';
+      return '连接中';
     case WebSocket.OPEN:
-      return 'Open';
+      return '已连接';
     case WebSocket.CLOSING:
-      return 'Closing';
+      return '关闭连接中';
     case WebSocket.CLOSED:
-      return 'Closed';
+      return '连接已关闭';
     default:
-      return 'Ø';
+      return '连接状态未知';
   }
 }
 function getRegistrationStatus(): string {

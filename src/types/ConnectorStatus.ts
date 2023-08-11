@@ -6,6 +6,7 @@ import type { AvailabilityType } from './ocpp/Requests';
 import type { Reservation } from './ocpp/Reservation';
 
 export interface ConnectorStatus {
+  displayName?: string;
   availability: AvailabilityType;
   bootStatus?: ConnectorStatusEnum;
   status?: ConnectorStatusEnum;
