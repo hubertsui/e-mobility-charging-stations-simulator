@@ -2,8 +2,8 @@ import type { BaseConfig } from '@/types';
 
 const config: BaseConfig = {
   uiServer: {
-    host: 'localhost',
-    port: 8080,
+    host: location.hostname || 'localhost',
+    port: parseInt(location.port || '8080'),
     protocol: 'ui0.0.1',
   },
 };

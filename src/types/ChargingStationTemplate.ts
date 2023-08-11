@@ -47,6 +47,7 @@ export interface FirmwareUpgrade {
     step?: number;
   };
   reset?: boolean;
+  manual?: boolean;
   failureStatus?: FirmwareStatus;
 }
 

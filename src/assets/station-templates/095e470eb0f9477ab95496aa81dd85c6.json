@@ -1,0 +1,188 @@
+{
+  "idTagsFile": "idtags.json",
+  "baseName": "095e470eb0f9477ab95496aa81dd85c6",
+  "fixedName": true,
+  "displayName": "测试设备",
+  "firmwareVersionPattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$",
+  "firmwareVersion": "4.0.4.22",
+  "firmwareStatus": "Installed",
+  "firmwareUpgrade": {
+    "manual": true
+  },
+  "chargePointModel": "Simulator simple",
+  "chargePointVendor": "Ovomaltin",
+  "power": 7500,
+  "powerUnit": "W",
+  "powerSharedByConnectors": true,
+  "currentOutType": "AC",
+  "numberOfConnectors": 4,
+  "randomConnectors": false,
+  "beginEndMeterValues": true,
+  "transactionDataMeterValues": true,
+  "ocppVersion": "1.6",
+  "Configuration": {
+    "configurationKey": [
+      {
+        "key": "MeterValuesSampledData",
+        "readonly": false,
+        "value": "SoC,Energy.Active.Import.Register,Current.Import,Energy.Active.Export.Register,Energy.Reactive.Export.Register,Energy.Reactive.Import.Register,Voltage,Power.Active.Import"
+      },
+      {
+        "key": "MeterValueSampleInterval",
+        "readonly": false,
+        "value": "30"
+      },
+      {
+        "key": "SupportedFeatureProfiles",
+        "readonly": true,
+        "value": "Core,FirmwareManagement,RemoteTrigger,LocalAuthListManagement"
+      },
+      {
+        "key": "LocalAuthListEnabled",
+        "readonly": false,
+        "value": "false"
+      },
+      {
+        "key": "AuthorizeRemoteTxRequests",
+        "readonly": false,
+        "value": "false"
+      },
+      {
+        "key": "WebSocketPingInterval",
+        "readonly": false,
+        "value": "30"
+      }
+    ]
+  },
+  "AutomaticTransactionGenerator": {
+    "enable": false,
+    "minDuration": 60,
+    "maxDuration": 80,
+    "minDelayBetweenTwoTransactions": 15,
+    "maxDelayBetweenTwoTransactions": 30,
+    "probabilityOfStart": 1,
+    "stopAfterHours": 0.3,
+    "stopOnConnectionFailure": false,
+    "requireAuthorize": false
+  },
+  "Connectors": {
+    "0": {},
+    "1": {
+      "displayName": "9081234566",
+      "bootStatus": "Available",
+      "bootErrorCode": "GroundFailure",
+      "transactionEndToStatus": "Available",
+      "energyActiveImportRegisterValue": 1837,
+      "transactionEnergyActiveImportRegisterValue": 1832,
+      "MeterValues": [
+        {
+          "unit": "Percent",
+          "context": "Sample.Periodic",
+          "measurand": "SoC",
+          "location": "EV",
+          "value": "30"
+        },
+        {
+          "unit": "Wh"
+        },
+        {
+          "measurand": "Current.Import"
+        },
+        {
+          "measurand": "Voltage"
+        },
+        {
+          "measurand": "Power.Active.Import",
+          "unit": "W"
+        }
+      ]
+    },
+    "2": {
+      "bootStatus": "Available",
+      "bootErrorCode": "GroundFailure",
+      "transactionEndToStatus": "Available",
+      "energyActiveImportRegisterValue": 1837,
+      "transactionEnergyActiveImportRegisterValue": 1832,
+      "MeterValues": [
+        {
+          "unit": "Percent",
+          "context": "Sample.Periodic",
+          "measurand": "SoC",
+          "location": "EV",
+          "value": "30"
+        },
+        {
+          "unit": "Wh"
+        },
+        {
+          "measurand": "Current.Import"
+        },
+        {
+          "measurand": "Voltage"
+        },
+        {
+          "measurand": "Power.Active.Import",
+          "unit": "W"
+        }
+      ]
+    }
+  },
+  "3": {
+    "bootStatus": "Available",
+    "bootErrorCode": "GroundFailure",
+    "transactionEndToStatus": "Available",
+    "energyActiveImportRegisterValue": 1837,
+    "transactionEnergyActiveImportRegisterValue": 1832,
+    "MeterValues": [
+      {
+        "unit": "Percent",
+        "context": "Sample.Periodic",
+        "measurand": "SoC",
+        "location": "EV",
+        "value": "30"
+      },
+      {
+        "unit": "Wh"
+      },
+      {
+        "measurand": "Current.Import"
+      },
+      {
+        "measurand": "Voltage"
+      },
+      {
+        "measurand": "Power.Active.Import",
+        "unit": "W"
+      }
+    ]
+  },
+  "4": {
+    "bootStatus": "Available",
+    "bootErrorCode": "GroundFailure",
+    "transactionEndToStatus": "Available",
+    "energyActiveImportRegisterValue": 1837,
+    "transactionEnergyActiveImportRegisterValue": 1832,
+    "MeterValues": [
+      {
+        "unit": "Percent",
+        "context": "Sample.Periodic",
+        "measurand": "SoC",
+        "location": "EV",
+        "value": "30"
+      },
+      {
+        "unit": "Wh"
+      },
+      {
+        "measurand": "Current.Import"
+      },
+      {
+        "measurand": "Voltage"
+      },
+      {
+        "measurand": "Power.Active.Import",
+        "unit": "W"
+      }
+    ]
+  }
+}

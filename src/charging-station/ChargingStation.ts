@@ -93,6 +93,7 @@ import {
   MeterValueMeasurand,
   type MeterValuesRequest,
   type MeterValuesResponse,
+  OCPP16FirmwareStatus,
   OCPPVersion,
   type OutgoingRequest,
   PowerUnits,
@@ -116,6 +117,7 @@ import {
   WebSocketCloseEventStatusCode,
   type WsOptions,
 } from '../types';
+import type { MessageLog } from '../types/ChargingStationInfo';
 import {
   ACElectricUtils,
   AsyncLock,
@@ -235,6 +237,40 @@ export class ChargingStation {
 
   public hasIdTags(): boolean {
     return isNotEmptyArray(this.idTagsCache.getIdTags(getIdTagsFile(this.stationInfo)!));
+  }
+
+  public async updateStatus(status?: ConnectorStatusEnum, connectorId?: number) {
+    if (status?.length) {
+      const connectorStatus = status;
+      if (connectorStatus) {
+        if (connectorId) {
+          await OCPPServiceUtils.sendAndSetConnectorStatus(
+            this,
+            connectorId,
+            connectorStatus,
+            undefined,
+            { send: true },
+          );
+        }
+        this.saveConfiguration();
+      }
+    }
+  }
+
+  public async updateFirmwareStatus(status: FirmwareStatus) {
+    if (status?.length) {
+      const firmwareStatus = OCPP16FirmwareStatus[status];
+      if (firmwareStatus) {
+        this.stationInfo.firmwareStatus = firmwareStatus;
+        this.saveConfiguration();
+        await this.ocppRequestService.requestHandler<
+          FirmwareStatusNotificationRequest,
+          FirmwareStatusNotificationResponse
+        >(this, RequestCommand.FIRMWARE_STATUS_NOTIFICATION, {
+          status: firmwareStatus,
+        });
+      }
+    }
   }
 
   public getEnableStatistics(): boolean {
@@ -1016,6 +1052,15 @@ export class ChargingStation {
     return false;
   }
 
+  public addMessage(msg: MessageLog) {
+    if (this.stationInfo !== null) {
+      if (!this.stationInfo.messages) {
+        this.stationInfo.messages = [];
+      }
+      this.stationInfo.messages.push(msg);
+    }
+  }
+
   private startReservationExpirationSetInterval(customInterval?: number): void {
     const interval =
       customInterval ?? Constants.DEFAULT_RESERVATION_EXPIRATION_OBSERVATION_INTERVAL;
@@ -1739,7 +1784,11 @@ export class ChargingStation {
   }
 
   private getOcppConfigurationFromFile(): ChargingStationOcppConfiguration | undefined {
-    const configurationKey = this.getConfigurationFromFile()?.configurationKey;
+    const config = this.getConfigurationFromFile();
+    if (config?.stationInfo?.messages) {
+      config.stationInfo.messages = [];
+    }
+    const configurationKey = config?.configurationKey;
     if (this.getOcppPersistentConfiguration() === true && configurationKey) {
       return { configurationKey };
     }
@@ -1848,6 +1897,13 @@ export class ChargingStation {
     if (this.getEnableStatistics() === true) {
       this.performanceStatistics?.addRequestStatistic(commandName, messageType);
     }
+    this.addMessage({
+      type: 'receive',
+      time: new Date(),
+      payload: JSON.stringify(commandPayload),
+      name: commandName,
+      success: true,
+    });
     logger.debug(
       `${this.logPrefix()} << Command '${commandName}' received request payload: ${JSON.stringify(
         request,
@@ -1878,6 +1934,13 @@ export class ChargingStation {
       messageType,
       messageId,
     )!;
+    this.addMessage({
+      type: 'receive',
+      time: new Date(),
+      payload: JSON.stringify(commandPayload),
+      name: requestCommandName,
+      success: true,
+    });
     logger.debug(
       `${this.logPrefix()} << Command '${
         requestCommandName ?? Constants.UNKNOWN_COMMAND
@@ -1898,6 +1961,13 @@ export class ChargingStation {
       );
     }
     const [, errorCallback, requestCommandName] = this.getCachedRequest(messageType, messageId)!;
+    this.addMessage({
+      type: 'receive',
+      time: new Date(),
+      payload: JSON.stringify(JSON.stringify(errorResponse)),
+      name: requestCommandName,
+      success: true,
+    });
     logger.debug(
       `${this.logPrefix()} << Command '${
         requestCommandName ?? Constants.UNKNOWN_COMMAND

@@ -1,3 +1,4 @@
+import * as fs from 'node:fs';
 import { type IncomingMessage, Server, type ServerResponse } from 'node:http';
 import { type Http2Server, createServer } from 'node:http2';
 
@@ -43,6 +44,18 @@ export abstract class AbstractUIServer {
     this.uiServices = new Map<ProtocolVersion, AbstractUIService>();
   }
 
+  public async readFile(filePath: string): Promise<string | Buffer> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, 'binary', (err, data: string | Buffer) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(data);
+      });
+    });
+  }
+
   public buildProtocolRequest(
     id: string,
     procedureName: ProcedureName,
@@ -73,6 +86,41 @@ export abstract class AbstractUIServer {
 
   protected startHttpServer(): void {
     if (this.httpServer.listening === false) {
+      this.httpServer.on('request', (req: IncomingMessage, res: ServerResponse) => {
+        if (req.url === '/') {
+          console.log('首页跳转');
+          res.writeHead(301, { Location: '/index.html' });
+          res.end();
+          return;
+        }
+        if (req.url?.length) {
+          const url: string = req.url;
+          if (url.indexOf('/') !== -1) {
+            console.log('获取静态文件', url, process.cwd());
+            const serveFile = (data: string | Buffer) => {
+              if (url.endsWith('.js')) {
+                res.setHeader('Content-Type', 'application/javascript');
+              }
+              res.write(data, 'binary');
+              res.end();
+            };
+            this.readFile('./dist' + url)
+              .then(serveFile)
+              .catch(() => {
+                this.readFile('./dist/dist' + url)
+                  .then(serveFile)
+                  .catch(() => {
+                    res.statusCode = 404;
+                    res.end();
+                  });
+              });
+            return;
+          }
+        }
+        console.log('404');
+        res.statusCode = 404;
+        res.end();
+      });
       this.httpServer.listen(this.uiServerConfiguration.options);
     }
   }

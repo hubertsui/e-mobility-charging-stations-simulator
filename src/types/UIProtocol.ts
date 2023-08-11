@@ -48,11 +48,14 @@ export enum ProcedureName {
   DATA_TRANSFER = 'dataTransfer',
   DIAGNOSTICS_STATUS_NOTIFICATION = 'diagnosticsStatusNotification',
   FIRMWARE_STATUS_NOTIFICATION = 'firmwareStatusNotification',
+  UPDATE_STATUS = 'updateStatus',
+  UPDATE_FIRMWARE_STATUS = 'updateFirmwareStatus',
 }
 
 export interface RequestPayload extends JsonObject {
   hashIds?: string[];
   connectorIds?: number[];
+  status?: string;
 }
 
 export enum ResponseStatus {
